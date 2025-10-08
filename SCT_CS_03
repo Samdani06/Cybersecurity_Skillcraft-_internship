@@ -1,0 +1,38 @@
+import re
+
+
+def assess_password_strength(password):
+    length_criteria = len(password) >= 8
+    upper_criteria = any(c.isupper() for c in password)
+    lower_criteria = any(c.islower() for c in password)
+    digit_criteria = any(c.isdigit() for c in password)
+    special_criteria = bool(re.search(r"[!@#$%^&*(),.?\":{}|<>]", password))
+
+    score = sum([length_criteria, upper_criteria, lower_criteria, digit_criteria, special_criteria])
+    if score == 5:
+        strength = "Very Strong 💪🔒"
+    elif score == 4:
+        strength = "Strong 🛡"
+    elif score == 3:
+        strength = "Medium 🔐"
+    elif score == 2:
+        strength = "Weak ⚠️"
+    else:
+        strength = "Very Weak ❌"
+
+    criteria_feedback = {
+        "Length (8+)": length_criteria,
+        "Uppercase": upper_criteria,
+        "Lowercase": lower_criteria,
+        "Number": digit_criteria,
+        "Special Char": special_criteria
+    }
+    return strength, criteria_feedback
+
+
+password = input("Enter your password: ")
+strength, feedback = assess_password_strength(password)
+print(f"Password Strength: {strength}")
+print("Criteria Met:")
+for k, v in feedback.items():
+    print(f"- {k}: {'✔' if v else '✘'}")
